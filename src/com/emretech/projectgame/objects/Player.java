@@ -106,6 +106,33 @@ public class Player extends GameObject{
 						handler.removeObject(tempObject);
 				}
 			}
+			if (tempObject.getId() == ObjectId.BrownBox) {
+				float boxX = tempObject.getX();
+				float boxY = tempObject.getY();
+				
+				// Top
+				if (getBoundsTop().intersects(tempObject.getBounds())) {
+					
+					handler.addObject(new Coin(boxX, boxY, ObjectId.Coin));
+					handler.removeObject(tempObject);
+				}
+				// Bottom
+				if (getBounds().intersects(tempObject.getBounds())) {
+					handler.removeObject(tempObject);
+				}
+				// Right
+				if (getBoundsRight().intersects(tempObject.getBounds())) {
+					x = tempObject.getX() - width - 3;	
+				}
+				else
+					falling = true;
+				// Left
+				if (getBoundsLeft().intersects(tempObject.getBounds())) {
+					x = tempObject.getX() + 35;	
+				}
+				else
+					falling = true;
+			}
 		}
 	}
 	
