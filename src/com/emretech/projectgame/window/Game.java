@@ -14,6 +14,7 @@ public class Game extends Canvas implements Runnable{
 	private Thread thread;
 	Handler handler;
 	Camera cam;
+	Music_and_Sounds music_sounds;
 	Graphics g;
 	public static int WIDTH, HEIGHT;
 	public static int updates = 0, frames = 0;
@@ -27,8 +28,8 @@ public class Game extends Canvas implements Runnable{
 	private void init() {
 		WIDTH = getWidth();
 		HEIGHT = getHeight();
-		/*String currentDirectory = System.getProperty("user.dir");
-		System.out.println(currentDirectory);*/
+		String currentDirectory = System.getProperty("user.dir");
+		System.out.println(currentDirectory);
 		
 		BufferedImageLoader imageLoader = new BufferedImageLoader();
 		//String currentDirectory = System.getProperty("user.dir");
@@ -39,6 +40,8 @@ public class Game extends Canvas implements Runnable{
 		
 		cam = new Camera(0,0);
 		
+		music_sounds = new Music_and_Sounds();
+		
 		switchLevel(levelNumber);
 		
 		/*handler.addObject(new Player(Game.WIDTH / 2,100, handler,ObjectId.Player));
@@ -46,6 +49,7 @@ public class Game extends Canvas implements Runnable{
 		handler.createLevel();*/
 		this.addKeyListener(new KeyInput(handler));
 		
+		music_sounds.playMusic(currentDirectory + "/Test.wav");
 	}
 	
 	public synchronized void start() {
