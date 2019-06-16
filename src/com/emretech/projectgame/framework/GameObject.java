@@ -12,6 +12,25 @@ public abstract class GameObject {
 	protected boolean falling = true;
 	protected boolean jumping = false;
 	protected boolean doubleJumping = false;
+	protected boolean leftCollision = false;
+	protected boolean rightCollision = false;
+	
+	public boolean isLeftCollision() {
+		return leftCollision;
+	}
+
+	public void setLeftCollision(boolean leftCollision) {
+		this.leftCollision = leftCollision;
+	}
+
+	public boolean isRightCollision() {
+		return rightCollision;
+	}
+
+	public void setRightCollision(boolean rightCollision) {
+		this.rightCollision = rightCollision;
+	}
+	
 	
 	public boolean isFalling() {
 		return falling;

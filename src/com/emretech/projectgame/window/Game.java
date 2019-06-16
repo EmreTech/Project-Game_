@@ -3,6 +3,7 @@ package com.emretech.projectgame.window;
 //import java.util.Scanner;
 import java.awt.*;
 import java.awt.image.*;
+import javax.swing.JOptionPane;
 
 import com.emretech.projectgame.framework.*;
 import com.emretech.projectgame.objects.*;
@@ -15,12 +16,14 @@ public class Game extends Canvas implements Runnable{
 	Handler handler;
 	Camera cam;
 	Music_and_Sounds music_sounds;
+	GameStateManager gameState = new GameStateManager();
 	Graphics g;
 	public static int WIDTH, HEIGHT;
 	public static int updates = 0, frames = 0;
 	private int levelNumber = 1;
 	public static int coins = 100000;
 	public static boolean super_speed = false;
+	private boolean music = true;
 	
 	private BufferedImage level;
 	private BufferedImage shop;
@@ -32,7 +35,7 @@ public class Game extends Canvas implements Runnable{
 		System.out.println(currentDirectory);
 		
 		BufferedImageLoader imageLoader = new BufferedImageLoader();
-		//String currentDirectory = System.getProperty("user.dir");
+		
 		level = imageLoader.loadImage("/Untitled.png");
 		shop = imageLoader.loadImage("/Shop.png");
 		
@@ -40,16 +43,23 @@ public class Game extends Canvas implements Runnable{
 		
 		cam = new Camera(0,0);
 		
-		music_sounds = new Music_and_Sounds();
+		music_sounds = new Music_and_Sounds(gameState);
 		
 		switchLevel(levelNumber);
 		
 		/*handler.addObject(new Player(Game.WIDTH / 2,100, handler,ObjectId.Player));
 		
 		handler.createLevel();*/
-		this.addKeyListener(new KeyInput(handler));
+		KeyInput key = new KeyInput(handler, gameState);
+		this.addKeyListener(key);
 		
-		music_sounds.playMusic(currentDirectory + "/Test.wav");
+		
+		if (music) {
+			JOptionPane.showMessageDialog(null, "Music: On");
+			music_sounds.playMusic(currentDirectory + "/res/Test.wav");
+		}
+		else
+			JOptionPane.showMessageDialog(null, "Music: Off");
 	}
 	
 	public synchronized void start() {
@@ -107,23 +117,25 @@ public class Game extends Canvas implements Runnable{
 		}
 		Graphics g = bs.getDrawGraphics();
 		Graphics2D g2d = (Graphics2D) g;
-		//////////////////////////////////
-		
-				
+			
 		//Draw here
-		g.setColor(Color.blue);
-		g.fillRect(0, 0, getWidth(), getHeight());
+		if (!gameState.isPaused()) {
+			g.setColor(Color.blue);
+			g.fillRect(0, 0, getWidth(), getHeight());
 		
-		g2d.translate((int)cam.getX(), (int)cam.getY());
+			g2d.translate((int)cam.getX(), (int)cam.getY());
+			
+			handler.render(g);
 		
-		handler.render(g);
-		
-		g2d.translate((int)-cam.getX(), (int)-cam.getY());
+			g2d.translate((int)-cam.getX(), (int)-cam.getY());
 
-		//////////////////////////////////
-		g.setColor(Color.white);
-		g.drawString("Coins: " + coins, 20, 20);
-		
+			g.setColor(Color.white);
+			g.drawString("Coins: " + coins, 20, 20);
+		}
+		else {
+			g.setColor(Color.white);
+			g.fillRect(0,0,getWidth(),getHeight());
+		}
 		g.dispose();
 		bs.show();
 	}

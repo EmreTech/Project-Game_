@@ -9,11 +9,10 @@ import com.emretech.projectgame.window.Game;
 
 public class Player extends GameObject{
 	
-	private float width = 48, height = 96;
+	private float width = 48, height = 96; // width = 48 height = 96
 	
 	private double gravity = 0.05f;
 	private final float MAX_SPEED = 10;
-	
 	
 	private Handler handler;
 	
@@ -57,8 +56,8 @@ public class Player extends GameObject{
 			if (tempObject.getId() == ObjectId.Block) {
 				//Top
 				if (getBoundsTop().intersects(tempObject.getBounds())) {
-					y = tempObject.getY() + 32;
-					velY = 0;	
+					y = tempObject.getY() + 36;
+					velY = 0;
 				}
 				else
 					falling = true;
@@ -73,16 +72,24 @@ public class Player extends GameObject{
 					falling = true;
 				//Right
 				if (getBoundsRight().intersects(tempObject.getBounds())) {
-					x = tempObject.getX() - width - 3;	
+					setRightCollision(true);
+					x = tempObject.getX() - width - 3;
+					
 				}
 				else
+					setRightCollision(false);
 					falling = true;
+					
 				//Left
 				if (getBoundsLeft().intersects(tempObject.getBounds())) {
-					x = tempObject.getX() + 35;	
+					setLeftCollision(true);
+					x = tempObject.getX() + 36;
+					
 				}
 				else
+					setLeftCollision(false);
 					falling = true;
+					
 			}
 			if (tempObject.getId() == ObjectId.Coin) {
 				// Top
@@ -136,14 +143,18 @@ public class Player extends GameObject{
 		}
 	}
 	
+	
+
+
 	public void render(Graphics g) {
-		Graphics2D g2d = (Graphics2D) g;
-		g.setColor(Color.red);
+		/*Graphics2D g2d = (Graphics2D) g;
+		g.setColor(Color.blue);
 		g2d.draw(getBounds());
 		g2d.draw(getBoundsRight());
 		g2d.draw(getBoundsLeft());
-		g2d.draw(getBoundsTop());
-		//g.setColor(Color.blue);
+		g2d.draw(getBoundsTop());*/
+		
+		g.setColor(Color.red);
 		g.fillRect((int)x, (int)y, (int)width, (int)height);
 	}
 
