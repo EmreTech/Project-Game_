@@ -25,14 +25,14 @@ public class Game extends Canvas implements Runnable{
 	public static int WIDTH, HEIGHT;
 	public static int updates = 0, frames = 0;
 	private int levelNumber = 1;
-	public static int coins = 100000;
+	public static int coins = 0;
 	public static boolean super_speed = false;
-	private boolean music = true;
+	private boolean music = false;
 	
 	private BufferedImage level;
 	private BufferedImage shop;
 	
-	private void init() {
+	private void init(){
 		WIDTH = getWidth();
 		HEIGHT = getHeight();
 		String currentDirectory = System.getProperty("user.dir");
@@ -61,13 +61,14 @@ public class Game extends Canvas implements Runnable{
 		KeyInput key = new KeyInput(handler, gameState);
 		this.addKeyListener(key);
 		
-		
 		if (music) {
 			JOptionPane.showMessageDialog(null, "Music: On");
 			music_sounds.play();
 		}
-		else
+		else {
 			JOptionPane.showMessageDialog(null, "Music: Off");
+			music_sounds.setVolume(0.0f);
+		}
 	}
 	
 	public synchronized void start() {
@@ -189,8 +190,7 @@ public class Game extends Canvas implements Runnable{
 			}
 		}
 	}
-	
 	public static void main(String[] args) {
-		new Window(800, 600, "Game Prototype", new Game());
+		new Window(800,600,"Game Prototype", new Game());
 	}
 }

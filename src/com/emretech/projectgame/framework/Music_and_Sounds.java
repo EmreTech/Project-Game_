@@ -47,6 +47,10 @@ public class Music_and_Sounds {
 		clip.open(audio);
 		clip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
+	public void setVolume(float newVolume) {
+		FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+		volume.setValue(newVolume);
+	}
 	public Clip returnClip() {
 		return clip;
 	}
