@@ -3,6 +3,9 @@ package com.emretech.projectgame.window;
 //import java.util.Scanner;
 import java.awt.*;
 import java.awt.image.*;
+import java.io.IOException;
+
+import javax.sound.sampled.*;
 import javax.swing.JOptionPane;
 
 import com.emretech.projectgame.framework.*;
@@ -18,6 +21,7 @@ public class Game extends Canvas implements Runnable{
 	Music_and_Sounds music_sounds;
 	GameStateManager gameState = new GameStateManager();
 	Graphics g;
+	Clip clip;
 	public static int WIDTH, HEIGHT;
 	public static int updates = 0, frames = 0;
 	private int levelNumber = 1;
@@ -43,7 +47,11 @@ public class Game extends Canvas implements Runnable{
 		
 		cam = new Camera(0,0);
 		
-		music_sounds = new Music_and_Sounds(gameState);
+		try {
+			music_sounds = new Music_and_Sounds(currentDirectory + "/res/Test.wav");
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			e.printStackTrace();
+		}
 		
 		switchLevel(levelNumber);
 		
@@ -56,7 +64,7 @@ public class Game extends Canvas implements Runnable{
 		
 		if (music) {
 			JOptionPane.showMessageDialog(null, "Music: On");
-			music_sounds.playMusic(currentDirectory + "/res/Test.wav");
+			music_sounds.play();
 		}
 		else
 			JOptionPane.showMessageDialog(null, "Music: Off");
@@ -85,7 +93,11 @@ public class Game extends Canvas implements Runnable{
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			while(delta >= 1){
-				tick();
+				try {
+					tick();
+				} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+					e.printStackTrace();
+				}
 				updates++;
 				delta--;
 			}
@@ -100,13 +112,19 @@ public class Game extends Canvas implements Runnable{
 			}
 		}
 	}
-	private void tick() {
+	private void tick() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
 		handler.tick();
 		for (int i = 0; i < handler.object.size(); i++) {
 			if (handler.object.get(i).getId() == ObjectId.Player)
 				cam.tick(handler.object.get(i));
 		}
-		
+		clip = music_sounds.returnClip();
+		if (gameState.isPaused())
+			music_sounds.pause();
+		else {
+			if (!music_sounds.returnPlaying())
+				music_sounds.resume();
+		}
 	}
 	
 	private void render() {
